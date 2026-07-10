@@ -1,13 +1,10 @@
 1. AI Workflow Builder(轻量版 Dify/Coze)
-热度:极高,AI Agent 编排平台是当前最热赛道之一。
 
 RAG:用户上传文档,构建知识库,节点可检索
 Tool-Use:内置工具节点(搜索、代码执行、API 调用),用户可组合
 Workflow:可视化拖拽画布编排 Agent 工作流,节点连线,条件分支
-亮点:前端用 Vue 做拖拽画布非常出彩,面试/展示效果极好
+亮点:前端用 Vue 做拖拽画布非常出彩,面试/展示效果极好）
 
-
-（如下的架构不是所有的都实现了）
 frontend/
 ├── public/
 ├── src/
@@ -85,63 +82,18 @@ frontend/
 
 
 AI Workflow Builder 前端开发计划
-
-技术栈
-
-技术
-
-选型
-
-框架
-
-Vue 3 + TypeScript
-
-状态管理
-
-Vuex 4
-UI 组件库
-Element Plus
-
-画布
-Vue Flow (@vue-flow/core)
-
-
-样式
-Tailwind CSS
-
-HTTP
-Axios + SSE
-
-
-构建
-
-Vite
- 
-
-项目现状 (截至 2026-07-2)
-
-Phase 0 已完成 -- 依赖安装、Vite/Tailwind/TS 配置、目录结构、store/index.ts、router/index.ts(含路由守卫)、utils/request.ts(Axios+JWT 拦截器)均已就绪。
-
 已有骨架文件:
-
-
 views/: LoginView, RegisterView, ChatView, CanvasView, KnowledgeView, ToolsView, MainLayout
-
 
 components/canvas/: WorkflowCanvas, NodePalette, NodeConfigPanel + 6 个节点组件
 
 components/chat/: MessageItem
 
-
 components/layout/: AppHeader
-
 
 store/: auth, chat, canvas, knowledge
 
-
 api/: auth, chat, workflow, knowledge, tools
-
-
 
 types/: auth, chat, workflow, knowledge
 
@@ -155,14 +107,13 @@ types/: auth, chat, workflow, knowledge
 │                                                      │
 └──────────────────────────────────────────────────────┘
 
-Phase 0: 项目初始化 -- 已完成
+Phase 0: 项目初始化
 
 Vite 项目、全部依赖、Tailwind、Element Plus、目录结构、代理配置(/api -> http://localhost:8000)、TypeScript 均已就绪。跳过此阶段。
 
-Phase 1:  （登录+注册没有任何问题）
+Phase 1: 
 
-已全部完成: utils/request.ts(JWT 拦截器)、store/auth.ts、api/auth.ts、路由守卫(router/index.ts)
-
+ utils/request.ts(JWT 拦截器)、store/auth.ts、api/auth.ts、路由守卫(router/index.ts)
 
 LoginView.vue -- 登录表单(用户名+密码),需验证 UI 完整性
 
@@ -179,11 +130,6 @@ store/auth.ts -- 确认 token 持久化(localStorage)和 user 状态管理
 
 Phase 2: 整体布局与导航 -- 需检查完善度
 
-已完成: AppHeader.vue、MainLayout.vue、路由配置
-
-待完成/验证:
-
-
 AppHeader.vue -- Logo + 导航 Tab(聊天/画布/知识库/工具) + 用户下拉菜单
 
 MainLayout.vue -- Header 固定顶部,下方 <router-view> 内容区
@@ -193,11 +139,9 @@ MainLayout.vue -- Header 固定顶部,下方 <router-view> 内容区
 
 验收标准: 顶部导航可用,Tab 切换对应路由,用户菜单可退出登录。 （此阶段已全部完成，实现了可以自由切换的顶部导航，并且用户可以退出登录）
 
-
 Phase 3: 聊天界面  （已全部完成，可以实现自由对话并保存到数据库内）
 
 目标: 完整对话体验,支持 SSE 流式输出。
-
 
 ChatView.vue -- 页面容器(左侧对话列表 + 右侧聊天区)
 
@@ -219,23 +163,8 @@ store/chat.ts -- 当前对话、消息列表、流式状态管理
 
 关键数据流: 用户输入 -> store.chat.sendMessage -> POST /api/chat -> SSE 逐条消息 -> store.chat.messages 实时更新 -> MessageList 渲染
 
-To-list：后端: models.py 添加 Conversation/Message 模型 + schema.sql
-后端: config.py 添加百炼 API 配置
-后端: routes/chat.py 实现对话/消息 CRUD + SSE 流式聊天
-后端: main.py 注册 chat router
-前端: types/chat.ts + api/chat.ts 对齐后端接口
-前端: store/chat.ts 重写支持 SSE 流式
-前端: utils/sse.ts SSE 连接工具
-前端: MarkdownRenderer.vue 代码高亮
-前端: ChatView/ConversationList/MessageList/ChatInput 组件完善
-前端: MessageItem.vue 集成 MarkdownRenderer + 流式打字效果
-后端: requirements.txt 添加 openai 依赖
-验证: linter 检查 + 端到端流程确认
-
-
 
 Phase 4: 画布编辑器 -- 核心（！！！！！！！！！！！！！）
-（尚未完成 ）
 
 目标: 可视化工作流搭建,节点拖拽+连线+配置。
 
@@ -338,50 +267,4 @@ Bug 修复
 
 开发顺序与依赖关系
 
-Phase 0 (已完成)
-    ↓
-Phase 1 (认证完善)  ──────────┐
-    ↓                         │
-Phase 2 (布局完善) ← 需认证   │
-    ↓                         │
-    ├── Phase 3 (聊天) ───────┤
-    ├── Phase 4 (画布) ← 核心 │
-    ├── Phase 5 (知识库)      │
-    └── Phase 6 (工具)        │
-         ↓                    │
-    Phase 7 (执行监控)        │
-         ↓                    │
-    Phase 8 (打磨) ← 全部完成 │
 
-Phase 3-6 可并行开发(独立 Tab 页面)。
-
-MVP 范围
-
-Phase 1 完善 -> Phase 2 完善 -> Phase 3 -> Phase 4
-
-完成后即可获得可运行的最小产品: 登录注册 + 页面切换 + 画布搭建工作流 + 基础对话。
-
-实施策略
-
-由于 Phase 0 已完成且 Phase 1-2 骨架代码存在,实际执行从 Phase 1 验证补全 开始:
-
-先检查现有 Phase 1/2 代码的完整度,补全缺失部分
-
-然后依次推进 Phase 3(聊天) -> Phase 4(画布)
-3
-Phase 5-7 根据需要穿插进行
-
-Phase 1: 认证系统完善 - 验证 LoginView/RegisterView 完整性、表单校验、api/auth.ts 接口、store/auth.ts 状态管理、路由守卫
-Phase 2: 布局与导航完善 - 验证 AppHeader/MainLayout、导航 Tab 切换、用户下拉菜单(退出登录)
-Phase 3:聊天界面-ConversationList、MessageList、Chatlnput、
-MarkdownRenderer、SSE 流式输出
-Phase 4:画布编辑器(核心)-Vue Flow 集成、6类节点组件、
-NodePalette 拖拽、NodeConfigPanel 动态配置、工作流保存/加载
-Phase 5:知识库-KBList/KBCreate/DocUpload/FileUploader、知识库
-CRUD
-Phase 6:工具调用-ToolList/ToolDetail、工具测试、ToolNode画布集
-成
-Phase 7:执行与监控-工作流执行、SSE状态推送、节点状态高亮、
-ExecutionLog
-Phase 8:打磨优化-Loading/错误处理、响应式适配、过渡动画、联
-调
