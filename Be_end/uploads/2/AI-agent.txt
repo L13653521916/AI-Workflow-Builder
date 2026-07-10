@@ -1,0 +1,534 @@
+1. AI Workflow Builder(轻量版 Dify/Coze)
+热度:极高,AI Agent 编排平台是当前最热赛道之一。
+
+RAG:用户上传文档,构建知识库,节点可检索
+Tool-Use:内置工具节点(搜索、代码执行、API 调用),用户可组合
+Workflow:可视化拖拽画布编排 Agent 工作流,节点连线,条件分支
+亮点:前端用 Vue 做拖拽画布非常出彩,面试/展示效果极好
+
+
+frontend/
+├── public/
+├── src/
+│   ├── api/                    # API 接口封装
+│   │   ├── auth.ts             # 认证相关接口
+│   │   ├── chat.ts             # 聊天接口
+│   │   ├── workflow.ts         # 工作流 CRUD
+│   │   ├── knowledge.ts        # 知识库接口
+│   │   └── tools.ts            # 工具接口
+│   ├── assets/                 # 静态资源
+│   ├── components/             # 通用组件
+│   │   ├── layout/             # 布局组件
+│   │   │   ├── AppHeader.vue   # 顶部导航栏
+│   │   │   └── AppSidebar.vue  # 侧边栏
+│   │   ├── chat/               # 聊天组件
+│   │   │   ├── MessageList.vue     # 消息列表
+│   │   │   ├── MessageItem.vue     # 单条消息
+│   │   │   ├── ChatInput.vue       # 输入框
+│   │   │   └── ConversationList.vue# 对话历史
+│   │   ├── canvas/             # 画布组件
+│   │   │   ├── WorkflowCanvas.vue  # 画布主容器
+│   │   │   ├── NodePalette.vue     # 节点面板(拖拽源)
+│   │   │   ├── NodeConfigPanel.vue # 节点配置面板
+│   │   │   └── nodes/              # 各类节点组件
+│   │   │       ├── LLMNode.vue
+│   │   │       ├── RAGNode.vue
+│   │   │       ├── ToolNode.vue
+│   │   │       ├── ConditionNode.vue
+│   │   │       ├── StartNode.vue
+│   │   │       └── EndNode.vue
+│   │   ├── knowledge/          # 知识库组件
+│   │   │   ├── KBList.vue      # 知识库列表
+│   │   │   ├── KBCreate.vue    # 创建知识库
+│   │   │   └── DocUpload.vue   # 文档上传
+│   │   ├── tools/              # 工具组件
+│   │   │   ├── ToolList.vue    # 工具列表
+│   │   │   └── ToolDetail.vue  # 工具详情/测试
+│   │   └── common/             # 通用组件
+│   │       ├── MarkdownRenderer.vue  # Markdown 渲染
+│   │       ├── LoadingSpinner.vue
+│   │       └── FileUploader.vue      # 文件上传
+│   ├── views/                  # 页面视图
+│   │   ├── LoginView.vue       # 登录页
+│   │   ├── RegisterView.vue    # 注册页
+│   │   ├── ChatView.vue        # 聊天页
+│   │   ├── CanvasView.vue      # 画布页
+│   │   ├── KnowledgeView.vue   # 知识库页
+│   │   └── ToolsView.vue       # 工具页
+│   ├── store/                  # Vuex 状态管理
+│   │   ├── index.ts
+│   │   ├── auth.ts             # 用户认证状态
+│   │   ├── chat.ts             # 聊天状态
+│   │   ├── canvas.ts           # 画布状态
+│   │   └── knowledge.ts        # 知识库状态
+│   ├── router/                 # 路由配置
+│   │   └── index.ts
+│   ├── utils/                  # 工具函数
+│   │   ├── request.ts          # Axios 封装 + JWT 拦截器
+│   │   └── sse.ts              # SSE 连接管理
+│   ├── types/                  # TypeScript 类型定义
+│   │   ├── auth.ts
+│   │   ├── chat.ts
+│   │   ├── workflow.ts
+│   │   └── knowledge.ts
+│   ├── App.vue
+│   └── main.ts
+├── index.html
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── tailwind.config.js
+
+
+AI Workflow Builder 前端开发计划
+
+技术栈
+
+
+
+
+
+
+
+技术
+
+
+
+选型
+
+
+
+
+
+框架
+
+
+
+Vue 3 + TypeScript
+
+
+
+
+
+状态管理
+
+
+
+Vuex 4
+
+
+
+
+
+UI 组件库
+
+
+
+Element Plus
+
+
+
+
+
+画布
+
+
+
+Vue Flow (@vue-flow/core)
+
+
+
+
+
+样式
+
+
+
+Tailwind CSS
+
+
+
+
+
+HTTP
+
+
+
+Axios + SSE
+
+
+
+
+
+构建
+
+
+
+Vite
+
+项目现状 (截至 2026-03-15)
+
+Phase 0 已完成 -- 依赖安装、Vite/Tailwind/TS 配置、目录结构、store/index.ts、router/index.ts(含路由守卫)、utils/request.ts(Axios+JWT 拦截器)均已就绪。
+
+已有骨架文件:
+
+
+
+
+
+views/: LoginView, RegisterView, ChatView, CanvasView, KnowledgeView, ToolsView, MainLayout
+
+
+
+components/canvas/: WorkflowCanvas, NodePalette, NodeConfigPanel + 6 个节点组件
+
+
+
+components/chat/: MessageItem
+
+
+
+components/layout/: AppHeader
+
+
+
+store/: auth, chat, canvas, knowledge
+
+
+
+api/: auth, chat, workflow, knowledge, tools
+
+
+
+types/: auth, chat, workflow, knowledge
+
+页面结构 (方案A: 并列切换)
+
+┌──────────────────────────────────────────────────────┐
+│  Logo     [聊天] [画布] [知识库] [工具]      用户名 ▼ │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│              对应 Tab 的内容区域                      │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+
+Phase 0: 项目初始化 -- 已完成
+
+Vite 项目、全部依赖、Tailwind、Element Plus、目录结构、代理配置(/api -> http://localhost:8000)、TypeScript 均已就绪。跳过此阶段。
+
+Phase 1: 认证系统 -- 需检查完善度
+
+已完成: utils/request.ts(JWT 拦截器)、store/auth.ts、api/auth.ts、路由守卫(router/index.ts)
+
+待完成/验证:
+
+
+
+
+
+LoginView.vue -- 登录表单(用户名+密码),需验证 UI 完整性
+
+
+
+RegisterView.vue -- 注册表单(用户名+邮箱+密码+确认密码),需验证表单校验
+
+
+
+api/auth.ts -- 确认 login/register/getMe 接口定义与后端对齐
+
+
+
+store/auth.ts -- 确认 token 持久化(localStorage)和 user 状态管理
+
+
+
+路由守卫 -- 确认未登录跳转 /login,已登录访问 /login 跳 /chat
+
+验收标准: 能完成注册->登录->进入主页面的完整闭环,token 正确存储和携带。
+
+Phase 2: 整体布局与导航 -- 需检查完善度
+
+已完成: AppHeader.vue、MainLayout.vue、路由配置
+
+待完成/验证:
+
+
+
+
+
+AppHeader.vue -- Logo + 导航 Tab(聊天/画布/知识库/工具) + 用户下拉菜单
+
+
+
+MainLayout.vue -- Header 固定顶部,下方 <router-view> 内容区
+
+
+
+用户下拉菜单 -- 个人信息、退出登录功能
+
+验收标准: 顶部导航可用,Tab 切换对应路由,用户菜单可退出登录。
+
+Phase 3: 聊天界面
+
+目标: 完整对话体验,支持 SSE 流式输出。
+
+待完成:
+
+
+
+
+
+ChatView.vue -- 页面容器(左侧对话列表 + 右侧聊天区)
+
+
+
+components/chat/ConversationList.vue -- 对话历史列表 + 新建对话按钮
+
+
+
+components/chat/MessageList.vue -- 消息滚动列表,自动滚到底部
+
+
+
+components/chat/MessageItem.vue -- 单条消息(区分用户/AI/系统,Markdown 渲染)
+
+
+
+components/chat/ChatInput.vue -- 输入框 + 发送按钮 + 附件按钮
+
+
+
+components/common/MarkdownRenderer.vue -- AI 回复 Markdown 渲染 + 代码高亮(使用 marked + highlight.js)
+
+
+
+utils/sse.ts -- SSE 连接管理(逐字推送,打字效果)
+
+
+
+api/chat.ts -- sendMessage / getConversations / getMessages 接口实现
+
+
+
+store/chat.ts -- 当前对话、消息列表、流式状态管理
+
+关键数据流: 用户输入 -> store.chat.sendMessage -> POST /api/chat -> SSE 逐条消息 -> store.chat.messages 实时更新 -> MessageList 渲染
+
+
+To-list：后端: models.py 添加 Conversation/Message 模型 + schema.sql
+后端: config.py 添加百炼 API 配置
+后端: routes/chat.py 实现对话/消息 CRUD + SSE 流式聊天
+后端: main.py 注册 chat router
+前端: types/chat.ts + api/chat.ts 对齐后端接口
+前端: store/chat.ts 重写支持 SSE 流式
+前端: utils/sse.ts SSE 连接工具
+前端: MarkdownRenderer.vue 代码高亮
+前端: ChatView/ConversationList/MessageList/ChatInput 组件完善
+前端: MessageItem.vue 集成 MarkdownRenderer + 流式打字效果
+后端: requirements.txt 添加 openai 依赖
+验证: linter 检查 + 端到端流程确认
+
+Phase 4: 画布编辑器 -- 核心
+
+目标: 可视化工作流搭建,节点拖拽+连线+配置。
+
+待完成:
+
+
+
+CanvasView.vue -- 画布页面容器(三栏布局: 左节点面板 | 中画布 | 右配置面板)
+
+
+NodePalette.vue -- 左侧节点拖拽源面板(起始/LLM/RAG/工具/条件/输出)
+
+
+WorkflowCanvas.vue -- Vue Flow 画布主组件(注册节点类型、处理拖拽放置、连线)
+
+
+6 个节点组件(StartNode/LLMNode/RAGNode/ToolNode/ConditionNode/EndNode) -- 各自的 UI 和 Handle 定义
+
+
+NodeConfigPanel.vue -- 右侧动态表单,根据选中节点类型切换配置项
+
+
+store/canvas.ts -- 节点列表、连线、选中节点状态
+
+
+api/workflow.ts -- saveWorkflow / loadWorkflow / listWorkflows 接口
+
+
+types/workflow.ts -- 节点类型、连线类型、工作流类型定义
+
+Vue Flow 集成要点:
+
+使用 @vue-flow/core 的 VueFlow 组件
+
+通过 useVueFlow() composable 管理节点/边状态
+
+自定义节点通过 nodeTypes 选项注册
+
+拖拽放置通过 onDrop 事件 + addNodes 实现
+
+
+Phase 5: 文件上传与知识库
+
+待完成:
+
+KnowledgeView.vue -- 知识库页面容器
+
+components/knowledge/KBList.vue -- 知识库卡片列表
+
+components/knowledge/KBCreate.vue -- 创建知识库对话框(名称+描述)
+
+components/knowledge/DocUpload.vue -- 文档上传(PDF/TXT/MD)
+
+components/common/FileUploader.vue -- 通用上传组件(进度条+拖拽)
+
+api/knowledge.ts -- createKB / uploadDoc / listDocs / deleteDoc
+
+store/knowledge.ts -- 知识库列表、当前知识库、文档列表
+
+
+Phase 6: 工具调用
+
+待完成:
+
+
+
+
+
+ToolsView.vue -- 工具页面容器
+
+
+
+components/tools/ToolList.vue -- 工具卡片列表(按类别筛选)
+
+
+
+components/tools/ToolDetail.vue -- 工具详情 + 在线测试面板
+
+
+
+api/tools.ts -- listTools / getToolDetail / testTool
+
+
+
+ToolNode 与画布集成(ToolNode 调用工具 API)
+
+Phase 7: 执行与监控
+
+待完成:
+
+
+
+
+
+工作流执行按钮(在画布页,触发后端执行)
+
+
+
+SSE 实时状态推送(节点执行状态)
+
+
+
+节点状态高亮(执行中=黄色,成功=绿色,失败=红色)
+
+
+
+ExecutionLog.vue -- 底部可折叠日志面板
+
+
+
+执行结果展示(节点输出内容查看)
+
+
+
+运行历史列表
+
+Phase 8: 打磨与优化
+
+待完成:
+
+
+
+
+
+全局 Loading 状态管理(axios 拦截器自动管理)
+
+
+
+全局错误处理(ElMessage 统一提示)
+
+
+
+响应式适配(移动端/平板)
+
+
+
+页面过渡动画
+
+
+
+前后端联调
+
+
+
+Bug 修复
+
+开发顺序与依赖关系
+
+Phase 0 (已完成)
+    ↓
+Phase 1 (认证完善)  ──────────┐
+    ↓                         │
+Phase 2 (布局完善) ← 需认证   │
+    ↓                         │
+    ├── Phase 3 (聊天) ───────┤
+    ├── Phase 4 (画布) ← 核心 │
+    ├── Phase 5 (知识库)      │
+    └── Phase 6 (工具)        │
+         ↓                    │
+    Phase 7 (执行监控)        │
+         ↓                    │
+    Phase 8 (打磨) ← 全部完成 │
+
+Phase 3-6 可并行开发(独立 Tab 页面)。
+
+MVP 范围
+
+Phase 1 完善 -> Phase 2 完善 -> Phase 3 -> Phase 4
+
+完成后即可获得可运行的最小产品: 登录注册 + 页面切换 + 画布搭建工作流 + 基础对话。
+
+实施策略
+
+由于 Phase 0 已完成且 Phase 1-2 骨架代码存在,实际执行从 Phase 1 验证补全 开始:
+
+
+
+
+
+先检查现有 Phase 1/2 代码的完整度,补全缺失部分
+
+
+
+然后依次推进 Phase 3(聊天) -> Phase 4(画布)
+
+
+
+Phase 5-7 根据需要穿插进行
+
+Phase 1: 认证系统完善 - 验证 LoginView/RegisterView 完整性、表单校验、api/auth.ts 接口、store/auth.ts 状态管理、路由守卫
+Phase 2: 布局与导航完善 - 验证 AppHeader/MainLayout、导航 Tab 切换、用户下拉菜单(退出登录)
+Phase 3:聊天界面-ConversationList、MessageList、Chatlnput、
+MarkdownRenderer、SSE 流式输出
+Phase 4:画布编辑器(核心)-Vue Flow 集成、6类节点组件、
+NodePalette 拖拽、NodeConfigPanel 动态配置、工作流保存/加载
+Phase 5:知识库-KBList/KBCreate/DocUpload/FileUploader、知识库
+CRUD
+Phase 6:工具调用-ToolList/ToolDetail、工具测试、ToolNode画布集
+成
+Phase 7:执行与监控-工作流执行、SSE状态推送、节点状态高亮、
+ExecutionLog
+Phase 8:打磨优化-Loading/错误处理、响应式适配、过渡动画、联
+调

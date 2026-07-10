@@ -1,0 +1,51 @@
+【简历项目描述 — AI Workflow Builder】
+
+项目名称：AI Workflow Builder（轻量版 AI Agent 编排平台）
+
+项目定位：
+独立开发的全栈 Web 应用，对标 Dify / Coze 核心能力，实现「对话 + 可视化工作流编排 + 知识库 + 工具调用 + 模型配置管理 + 工作流执行监控」完整闭环，可作为 AI 应用开发平台的最小可行产品（MVP）展示。
+
+技术栈：
+前端：Vue 3 + TypeScript + Vite + Vuex + Vue Router + Element Plus + Tailwind CSS + Vue Flow（@vue-flow/core）+ Axios + SSE + marked/highlight.js
+后端：Python FastAPI + SQLAlchemy + MySQL + JWT（python-jose/bcrypt）+ OpenAI 兼容 API（百炼 / DeepSeek / GPT / Claude / 自定义）+ SSE 流式响应
+其他：RESTful API 设计、前后端分离架构、本地文件存储、子进程代码沙箱执行、用户级模型配置运行时
+
+核心功能（9 大模块，35 个 API 端点）：
+
+1. 用户认证：JWT 无状态鉴权，注册/登录/路由守卫，毛玻璃风格登录页，Token 持久化与自动刷新用户信息。
+
+2. AI 聊天：基于百炼大模型的多轮对话，SSE 流式逐字输出（打字机效果），Markdown 渲染与代码高亮，对话历史 CRUD 持久化至 MySQL，自动以首条消息生成对话标题，上下文窗口管理（最近 20 条）。
+
+3. 可视化工作流画布：基于 Vue Flow 实现拖拽式 Agent 编排编辑器，支持 6 类节点（起始/LLM/RAG/Tool/条件/输出），节点拖拽放置、Handle 连线、动态配置面板、工作流 CRUD（创建/保存/加载/删除/重命名），节点坐标持久化，连线增删，执行状态三色高亮（黄/绿/红）。
+
+4. 知识库管理：知识库 CRUD，PDF/TXT/MD 文档上传（multipart + 本地磁盘存储），文档列表管理与级联删除，FileUploader 拖拽上传组件，RAG 节点与知识库下拉联动。
+
+5. 工具市场：9 个内置工具（Web 搜索、Python 代码执行、HTTP 请求、JSON 解析、文本处理等），支持用户自定义工具（复用底层 Handler），在线参数测试面板，Tool 节点与工具 API 联动，按分类筛选。
+
+6. 模型配置管理（新增）：独立「模型」页管理 LLM 推理节点所用大模型，支持通义千问 / DeepSeek / GPT / Claude / 自定义五种提供商，前端配置 Base URL 与 API Key（优先于后端默认配置），高级策略可配（Token 预算分配、上下文压缩、历史对话策略、Agent 推理模式、工具白名单、可观测性开关），在线连接测试，多配置 CRUD 与默认模型标记，画布 LLM 节点下拉绑定模型配置。
+
+7. 工作流执行引擎：自研 DAG 拓扑排序执行器 + model_runtime 模型运行时，LLM 节点按用户模型配置动态创建 OpenAI 兼容客户端，应用 Token 预算与 RAG 片段注入，SSE 实时推送节点状态与模型 trace 日志（配置名、延迟、Agent 模式、RAG 注入段数、Token 用量），执行记录持久化（workflow_runs 表），运行历史查询与详情回放。
+
+8. 执行监控面板：底部可折叠/可拖拽调整大小的 ExecutionLog 组件，实时日志流、节点输出查看、最终输出展示，运行历史抽屉与详情弹窗，布局尺寸 localStorage 记忆。
+
+9. 全局工程化：Axios 拦截器统一 Loading 与错误处理，页面过渡动画，移动端响应式适配，9 张 MySQL 数据表，完整的 Pydantic 请求校验与 ORM 模型。
+
+工作流与模型运行时实现细节（简历重点）：
+- 前端：Vue Flow 注册 6 类自定义节点；LLM 节点通过 modelProfileId 绑定「模型」页配置；Vuex 集中管理画布与模型列表状态；workflowSse.ts 解析 SSE 驱动节点状态机（idle→running→success/failed）。
+- 后端：workflow_executor.py BFS 拓扑排序 + execute_node() 按类型分发；model_runtime.py 解析用户 model_profiles（节点指定 ID → 默认配置 → 服务端回退），快照 ORM 数据后独立 Session 调用 LLM，避免 SSE 流式场景下 SQLAlchemy 会话脱离；应用上下文 Token 预算、RAG chunks 注入、历史策略与压缩策略构建 messages；execution.py 在 commit 前缓存 user_id，修复流式执行时会话过期问题。
+- 可验证性：模型页「测试连接」验证 API 可用性；工作流执行日志输出「模型配置生效」行，含配置名、Base URL、延迟、Agent 模式；接 RAG 时 prompt Token 显著增加并显示 RAG 注入段数。
+
+项目优势：
+- 完整度高：覆盖认证、对话、编排、知识库、工具、模型配置、执行监控全链路，非单点 Demo。
+- 技术广度：可视化编辑、SSE 流式通信、JWT 鉴权、多模型 OpenAI 兼容接入、用户级配置运行时、工作流 DAG 引擎。
+- 可扩展性强：模型配置 JSON 结构可扩展；工具 Handler 热插拔；知识库预留真实向量化 RAG；Agent 模式与工具白名单预留完整 Agent 循环扩展。
+- 工程规范：前后端分离 + TypeScript + Pydantic + 模块化 Vuex，ORM 与会话管理考虑流式长连接场景。
+- 产品化体验：模型配置抽屉分块表单、执行日志模型 trace、毛玻璃登录页、节点三色高亮、可拖拽日志面板。
+
+项目作用与价值：
+- 验证「对话 + 编排 + 知识库 + 工具 + 模型管理 + 执行」六合一 AI 平台架构可行性。
+- 模型配置与执行解耦，支持同一画布切换不同大模型与策略，适用于多租户、多环境部署场景。
+- 完整代码、9 张数据表、35 个 API 文档，可作为二次开发基础，扩展真实 RAG 向量检索、Agent 多轮工具调用、工作流定时调度等。
+
+建议简历一句话描述：
+「独立全栈开发 AI Workflow Builder 平台，基于 Vue3 + Vue Flow 实现可视化 Agent 工作流编排，自建 model_runtime 支持用户级多模型配置（千问/DeepSeek/GPT/Claude）与 LLM 节点动态接入，集成知识库 RAG 注入、9+ 工具调用与工作流 DAG 执行引擎，涵盖 35 个 RESTful/SSE API 端点与 9 张 MySQL 数据表，完成从认证到模型配置、执行追踪的完整 AI Agent 应用闭环。」
