@@ -941,7 +941,7 @@ data: {"type": "done", "message_id": 42, "created_at": "2026-07-02T10:05:00"}
     "name": "模型1",
     "provider": "qianwen",
     "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    "apiKeyMasked": "sk-6***cd4c",
+    "apiKeyMasked": "sk-6***1111",
     "modelId": "qwen3.7-plus",
     "config": { "...": "..." },
     "isDefault": true,
