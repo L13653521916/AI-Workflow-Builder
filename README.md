@@ -1,4 +1,5 @@
 # AI Workflow Builder — 完整项目介绍文档
+（项目细节代码位于details 分支中）
 
 > 轻量版 AI Agent 编排平台（类 Dify / Coze）  
 > 版本：0.1.0 | 文档更新：2026-07-02（含模型管理模块）
