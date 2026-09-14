@@ -55,7 +55,7 @@ flowchart LR
     C --> D[Axios 拦截器注入 Header]
     D --> E[访问 Chat / Canvas 等受保护页面]
 ```
-<div align="center"><img src="Pic/1_登录页面.png" width="88%" alt="登录页面"/><br/><sub><b>Login</b> · 注册 / 登录 / JWT · 路由守卫 · 会话恢复</sub></div>
+<div align="center"><img src="Pic/1_登陆页面.png" width="88%" alt="登录页面"/><br/><sub><b>Login</b> · 注册 / 登录 / JWT · 路由守卫 · 会话恢复</sub></div>
 
 ### ② AI 对话
 
