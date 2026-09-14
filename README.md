@@ -6,21 +6,15 @@
 
 轻量版 AI Agent 编排平台 · 对标 Dify / Coze 核心能力 · 完整 MVP 闭环
 
-<br/>
-
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Vue](https://img.shields.io/badge/Vue_3-4FC08D?style=flat-square&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-<br/>
-
 [产品概览](#-产品概览) · [演示](#-demo) · [系统架构](#-系统架构) · [核心能力](#-核心能力) · [快速开始](#-快速开始) · [详细文档](#-详细文档)
 
 </div>
-
----
 
 ## 🧭 产品概览
 
@@ -39,13 +33,9 @@ AI Workflow Builder 是一个**前后端分离**的全栈 Web 应用，覆盖 Ag
 
 > 当前版本 **v0.1.0** · 完整代码与接口细节见 [`details`](https://github.com/L13653521916/AI-Workflow-Builder/tree/details) 分支
 
----
-
 ## 📸 Demo
 
 以下截图均来自**真实本地 Run**，展示从登录到工作流执行的完整产品路径。
-
----
 
 ### ① 登录与认证
 
@@ -65,14 +55,7 @@ flowchart LR
     C --> D[Axios 拦截器注入 Header]
     D --> E[访问 Chat / Canvas 等受保护页面]
 ```
-
-<p align="center">
-  <img src="1_登录页面.png" width="88%" alt="登录页面"/>
-</p>
-
-<p align="center"><sub><b>Login</b> · 注册 / 登录 / JWT · 路由守卫 · 会话恢复</sub></p>
-
----
+<div align="center"><img src="Pic/1_登录页面.png" width="88%" alt="登录页面"/><br/><sub><b>Login</b> · 注册 / 登录 / JWT · 路由守卫 · 会话恢复</sub></div>
 
 ### ② AI 对话
 
@@ -91,7 +74,6 @@ sequenceDiagram
     participant F as Vue Chat
     participant B as FastAPI
     participant L as LLM API
-
     U->>F: 发送消息
     F->>B: POST /api/chat (SSE)
     B->>L: OpenAI 兼容流式请求
@@ -99,32 +81,20 @@ sequenceDiagram
     B-->>F: SSE push
     F-->>U: 实时 Markdown 渲染
 ```
-
-<p align="center">
-  <img src="2_AI聊天页面.png" width="88%" alt="AI 聊天页面"/>
-</p>
-
-<p align="center"><sub><b>Chat</b> · 多轮对话 · SSE 流式 · Markdown 渲染 · 历史持久化</sub></p>
-
----
+<div align="center"><img src="Pic/2_AI聊天页面.png" width="88%" alt="AI 聊天页面"/><br/><sub><b>Chat</b> · 多轮对话 · SSE 流式 · Markdown 渲染 · 历史持久化</sub></div>
 
 ### ③ 可视化工作流编排
 
 **模块定位**：产品核心——基于 **Vue Flow** 的可视化 Agent 编排画布，支持 6 类节点拖拽、连线与动态配置。
 
-#### 画布布局
-
+**画布布局**
 ```
 ┌──────────────┬────────────────────────────┬──────────────┐
 │  NodePalette │      WorkflowCanvas        │ NodeConfig   │
 │  节点面板     │   Vue Flow 拖拽 / 连线      │  动态表单     │
-│  (左)        │        + 小地图             │  (右)        │
 └──────────────┴────────────────────────────┴──────────────┘
-                              │
-                    ExecutionLog 执行日志 (底部)
+                              │ ExecutionLog (底部)
 ```
-
-#### 6 类节点
 
 | 类型 | 标识 | 分类 | 说明 |
 |------|------|------|------|
@@ -137,19 +107,11 @@ sequenceDiagram
 
 **典型链路**：`起始 → RAG 检索 → LLM 推理 → 输出`
 
-<p align="center">
-  <img src="3_画布工作流推理.png" width="88%" alt="画布工作流推理"/>
-</p>
-
-<p align="center"><sub><b>Canvas</b> · Vue Flow 画布 · 6 类节点 · RAG+LLM 链路 · 节点级配置面板</sub></p>
-
----
+<div align="center"><img src="Pic/3_画布工作流推理.png" width="88%" alt="画布工作流推理"/><br/><sub><b>Canvas</b> · Vue Flow 画布 · 6 类节点 · RAG+LLM 链路 · 节点级配置面板</sub></div>
 
 ### ④ 工作流执行与监控
 
 **模块定位**：自研 **DAG 执行引擎**（`workflow_executor.py`），按拓扑序调度节点，SSE 实时推送状态，支持 Trace 级可观测。
-
-#### 执行流程
 
 ```mermaid
 flowchart TD
@@ -173,13 +135,7 @@ flowchart TD
 | 模型 Trace | 配置名 · 延迟 · Agent 模式 · RAG 注入段数 · Token 用量 |
 | 运行历史 | `workflow_runs` 表持久化，支持回溯 |
 
-<p align="center">
-  <img src="4_画布工作流推理结果.png" width="88%" alt="画布工作流推理结果"/>
-</p>
-
-<p align="center"><sub><b>Execution</b> · DAG 调度 · SSE 实时日志 · Trace 追踪 · 运行历史</sub></p>
-
----
+<div align="center"><img src="Pic/4_画布工作流推理结果.png" width="88%" alt="画布工作流推理结果"/><br/><sub><b>Execution</b> · DAG 调度 · SSE 实时日志 · Trace 追踪 · 运行历史</sub></div>
 
 ### ⑤ 知识库管理
 
@@ -199,22 +155,15 @@ flowchart LR
     C --> D[执行时检索 chunks]
     D --> E[注入 LLM Prompt]
 ```
-
-<p align="center">
-  <img src="5_知识库页面.png" width="44%" alt="知识库页面"/>
-  &nbsp;&nbsp;
-  <img src="6_新增知识库.png" width="44%" alt="新增知识库"/>
-</p>
-
-<p align="center"><sub><b>Knowledge Base</b> · 多格式上传 · 知识库 CRUD · RAG 节点联动</sub></p>
-
----
+<div align="center">
+<img src="Pic/5_知识库页面.png" width="44%" alt="知识库页面"/>
+<img src="Pic/6_新增知识库.png" width="44%" alt="新增知识库"/>
+<br/><sub><b>Knowledge Base</b> · 多格式上传 · 知识库 CRUD · RAG 节点联动</sub>
+</div>
 
 ### ⑥ 工具与模型配置
 
 **模块定位**：Agent 的「能力层」——工具市场提供可调用 Handler，模型中心统一管理多提供商 LLM 连接与运行时策略。
-
-#### 内置工具（9 个）
 
 | 工具 | Handler | 分类 | 功能 |
 |------|---------|------|------|
@@ -228,13 +177,7 @@ flowchart LR
 | text_length | text_length | text | 文本统计 |
 | current_time | current_time | utility | 系统时间 |
 
-#### 模型配置优先级
-
-```
-1. LLM 节点指定的 modelProfileId
-2. 用户 is_default=true 的默认配置
-3. 回退至 config.py 服务端默认（DASHSCOPE_*）
-```
+**模型配置优先级**：`节点 modelProfileId` → `用户默认配置` → `config.py 服务端默认`
 
 | 提供商 | 标识 | 说明 |
 |--------|------|------|
@@ -244,22 +187,15 @@ flowchart LR
 | Claude | `claude` | 需兼容代理网关 |
 | 自定义 | `custom` | 自行填写 Base URL |
 
-**高级策略**：Token 预算分配（System / User / Tool / RAG）· 历史策略（滑动窗口 / 摘要 / 向量检索）· 连接测试
-
-<p align="center">
-  <img src="7_自定义工具调用页面.png" width="44%" alt="自定义工具调用"/>
-  &nbsp;&nbsp;
-  <img src="8_自定义模型引入.png" width="44%" alt="自定义模型引入"/>
-</p>
-
-<p align="center"><sub><b>Tools & Models</b> · 9 内置工具 + 自定义 · 多提供商 · Token 预算 · 连接测试</sub></p>
-
----
+<div align="center">
+<img src="Pic/7_自定义工具调用页面.png" width="44%" alt="自定义工具调用"/>
+<img src="Pic/8_自定义模型引入.png" width="44%" alt="自定义模型引入"/>
+<br/><sub><b>Tools & Models</b> · 9 内置工具 + 自定义 · 多提供商 · Token 预算 · 连接测试</sub>
+</div>
 
 ## 🏗 系统架构
 
-### 整体分层
-
+#### 整体分层
 ```mermaid
 flowchart TB
     subgraph FE["前端 Vue 3 SPA"]
@@ -269,7 +205,6 @@ flowchart TB
         V4[Knowledge · Tools · Models]
         VX[Vuex Store + Axios JWT]
     end
-
     subgraph BE["后端 FastAPI :8000"]
         R1[auth]
         R2[chat]
@@ -279,20 +214,18 @@ flowchart TB
         R6[models]
         R7[execution / workflow_executor]
     end
-
     subgraph INFRA["基础设施"]
         DB[(MySQL AiWork)]
         LLM[OpenAI 兼容 API]
         FS[uploads/ 文件存储]
     end
-
     FE -->|HTTP /api/*| BE
     BE --> DB
     BE --> LLM
     BE --> FS
 ```
 
-### 技术栈
+#### 技术栈
 
 | 层级 | 技术选型 |
 |------|----------|
@@ -306,7 +239,7 @@ flowchart TB
 | 认证 | JWT（python-jose）+ bcrypt |
 | AI 运行时 | OpenAI 兼容客户端 · 自研 model_runtime |
 
-### 数据模型（核心表）
+#### 数据模型（核心表）
 
 | 表名 | 用途 |
 |------|------|
@@ -318,31 +251,14 @@ flowchart TB
 | `model_profiles` | 多模型配置（含 `config_json` 策略） |
 | `workflow_runs` | 执行记录 · 日志 · 输出 |
 
-### 工作流 graph_json 结构
+#### 工作流 graph_json 结构
 
 ```json
 {
-  "nodes": [
-    {
-      "id": "node_xxx",
-      "type": "llm",
-      "label": "LLM 推理",
-      "position": { "x": 300, "y": 200 },
-      "config": {
-        "modelProfileId": 1,
-        "prompt": "请总结：{{input}}",
-        "systemPrompt": "你是一个问答客服"
-      }
-    }
-  ],
-  "edges": [
-    { "source": "node_start", "target": "node_rag" },
-    { "source": "node_rag", "target": "node_llm" }
-  ]
+  "nodes": [{ "id": "node_xxx", "type": "llm", "config": { "modelProfileId": 1, "prompt": "请总结：{{input}}" } }],
+  "edges": [{ "source": "node_start", "target": "node_rag" }, { "source": "node_rag", "target": "node_llm" }]
 }
 ```
-
----
 
 ## ✨ 核心能力总览
 
@@ -356,59 +272,29 @@ flowchart TB
 | 🤖 模型 | 多提供商 · API Key · 高级策略 | model_runtime · Token 预算 · Trace |
 | ⚡ 执行 | 一键运行 · SSE · 运行历史 | DAG 拓扑调度 · workflow_runs 持久化 |
 
----
-
 ## 🚀 快速开始
 
-### 环境要求
-
-- Python 3.10+
-- Node.js 18+
-- MySQL 8.0+
-
-### 后端
+**环境要求**：Python 3.10+ · Node.js 18+ · MySQL 8.0+
 
 ```bash
-cd Be_end
-pip install -r requirements.txt
-# 执行 schema.sql 初始化数据库，配置 config.py
+# 后端
+cd Be_end && pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
-```
 
-### 前端
-
-```bash
-cd Front_end   # 或 Fe_end，以仓库实际目录为准
-npm install
-npm run dev
+# 前端
+cd Front_end && npm install && npm run dev
 ```
 
 访问 `http://localhost:5173`，Vite 将 `/api` 代理至 `http://localhost:8000`。
 
-### 推荐体验路径
-
-1. 注册账号 → 登录
-2. **模型** 页添加通义千问配置并测试连接
-3. **知识库** 页上传文档
-4. **画布** 搭建 `起始 → RAG → LLM → 输出` 链路并运行
-5. 查看底部执行日志与 Trace 输出
-
----
+**推荐体验路径**：注册登录 → 模型页配置并测试 → 知识库上传文档 → 画布搭建 RAG+LLM 链路 → 查看执行 Trace
 
 ## 📖 详细文档
 
 完整模块说明、数据库设计、API 接口与执行引擎细节，请查看 [`details` 分支](https://github.com/L13653521916/AI-Workflow-Builder/tree/details)。
 
----
-
 ## 📬 联系
 
 如有问题或合作意向，欢迎通过 [GitHub Issues](https://github.com/L13653521916/AI-Workflow-Builder/issues) 联系。
 
----
-
-<div align="center">
-
-**⭐ 如果这个项目对你有帮助，欢迎 Star 支持一下！**
-
-</div>
+<div align="center">**⭐ 如果这个项目对你有帮助，欢迎 Star 支持一下！**</div>
